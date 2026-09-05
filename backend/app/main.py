@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 
+from app.core.config import settings
+
 app = FastAPI(
-    title="Raahi API",
+    title=settings.app_name,
     description="Backend API for the Raahi community platform",
-    version="1.0.0",
+    version=settings.app_version,
 )
 
 
