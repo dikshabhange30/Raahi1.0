@@ -1,0 +1,18 @@
+# Python
+backend/env/
+backend/__pycache__/
+backend/**/*.pyc
+
+# Environment variables / secrets
+backend/.env
+
+# Node
+raahi_frontend/node_modules/
+raahi_frontend/dist/
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
