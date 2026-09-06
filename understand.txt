@@ -1,0 +1,152 @@
+## Raahi Backend Architecture — Basic Understanding
+
+### 1. Authentication
+
+Authentication answers: **"Who is this user?"**
+
+Raahi registration creates an account using basic account information such as username, email, and password.
+
+The email must be verified using an OTP before the account is considered verified.
+
+Login accepts either:
+
+* Username + password
+* Email + password
+
+After successful login, the backend provides a JWT access token.
+
+### 2. Authorization
+
+Authorization answers: **"What is this authenticated user allowed to do?"**
+
+Examples:
+
+* A normal user cannot create communities.
+* Only the admin can create/manage communities.
+* A user cannot access another user's private data without permission.
+* Community membership must follow eligibility rules.
+
+### 3. Account vs Profile
+
+An account contains information required for authentication and account management.
+
+A profile contains information about the person within Raahi, such as gender, city, profession, languages, bio, and profile image.
+
+The profile can be completed after login.
+
+### 4. Immutable Gender
+
+Gender is an important profile attribute because it affects community eligibility.
+
+Once a user selects their gender, the backend will not allow the user to change it through the normal API.
+
+This rule must be enforced by the backend, not only by the frontend.
+
+### 5. Community Eligibility
+
+A user's gender determines which communities they are allowed to join.
+
+For example:
+
+* Male → Male or Unisex communities
+* Female → Female or Unisex communities
+
+The backend performs the final eligibility check.
+
+### 6. Admin
+
+Raahi has one administrator who manages the application from protected backend functionality.
+
+The admin can:
+
+* Create/manage communities
+* Moderate users
+* Review reports
+* Handle feature requests
+
+Admin functionality does not need to be exposed as a normal frontend feature initially.
+
+### 7. User Safety
+
+Users can block other users and report inappropriate behavior.
+
+Blocking affects what users can do with each other.
+
+Reports are stored so the administrator can review and take action.
+
+### 8. Main Raahi Modules
+
+* Authentication
+* User/Profile
+* Communities
+* Community Membership
+* Help
+* Messaging
+* Blocking
+* Reporting
+* Notifications
+* Admin/Moderation
+* Feature Requests
+
+### 9. High-Level Flow
+
+Registration
+→ Email OTP verification
+→ Login
+→ JWT authentication
+→ Profile completion
+→ Community discovery
+→ Eligibility check
+→ Join community
+→ Help / Messaging / Community interaction
+→ Block / Report when necessary
+→ Admin moderation when required
+
+
+
+
+
+Raahi
+  ↓
+SQLAlchemy Engine
+  ↓
+PostgreSQL (raahi1)
+
+
+
+Engine → manages communication/connections with PostgreSQL.
+Session → the object our application uses to actually work with database data.
+Request
+  ↓
+get_db()
+  ↓
+create Session
+  ↓
+endpoint uses DB
+  ↓
+request finishes
+  ↓
+close Session
+
+
+
+imports
+   ↓
+engine
+   ↓
+SessionLocal
+   ↓
+Base
+   ↓
+get_db()
+
+
+
+SQLAlchemy User → describes what PostgreSQL stores.
+
+Pydantic UserCreate → describes what the API expects when someone registers.
+
+
+
+Frontend -> username -> email password -> Pydantic UserCreate -> validation -> SQLAlchemy User -> PostgreSQL
+
