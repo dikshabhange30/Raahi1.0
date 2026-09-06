@@ -20,3 +20,4 @@ class User(Base):
     bio = Column(String, nullable=True)
     profile_image = Column(String, nullable=True)
     preferred_contact = Column(String, nullable=True)
+    

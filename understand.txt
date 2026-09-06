@@ -150,3 +150,50 @@ Pydantic UserCreate → describes what the API expects when someone registers.
 
 Frontend -> username -> email password -> Pydantic UserCreate -> validation -> SQLAlchemy User -> PostgreSQL
 
+
+We're putting security-related helper functions in core/ like settings object and security 
+
+
+Pydantic → Argon2 → SQLAlchemy → PostgreSQL → OTP.
+
+
+Why routers/?
+
+We don't want to put every endpoint inside main.py.
+Instead : 
+
+main.py -> application setup
+
+routers/auth.py -> authentication endpoints
+
+routers/users.py -> user/profile endpoints
+
+routers/communities.py -> community endpoints
+
+
+
+The __init__.py makes routers a Python package and keeps imports predictable.
+
+
+
+
+routers/ is a section/category for API endpoints. Each router file groups endpoints belonging to one responsibility:
+
+routers/
+│
+├── auth.py          → registration, login, OTP
+├── users.py         → profile, user-related operations
+├── communities.py   → community operations
+├── messages.py      → messaging
+├── reports.py       → reports
+└── admin.py         → admin-only operations
+
+
+
+
+Remember this order  ::::::::::
+
+imports ->  create FastAPI app ->  database setup ->  include routers -> define endpoints
+
+
+
