@@ -197,3 +197,5 @@ imports ->  create FastAPI app ->  database setup ->  include routers -> define 
 
 
 
+if we're changing the database structure, create_all() will create the new table when the application starts.
+
