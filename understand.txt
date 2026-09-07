@@ -199,3 +199,12 @@ imports ->  create FastAPI app ->  database setup ->  include routers -> define 
 
 if we're changing the database structure, create_all() will create the new table when the application starts.
 
+services/?
+Think of it as the place for business logic that an endpoint needs but shouldn't contain directly inside the router.
+
+
+
+
+Resend: A transactional email service that allows our Raahi backend to send emails programmatically.
+ We will use it to send the email verification OTP to a user's email address during registration.
+ The Raahi backend communicates with Resend using an API key, while the API key remains private in .env.

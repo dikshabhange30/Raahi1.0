@@ -9,6 +9,8 @@ from app.core.security import (
     hash_password,
     verify_otp
 )
+from app.services.email import send_verification_email
+
 from app.database import get_db
 from app.models import EmailVerification, User
 from app.schemas import EmailOTPVerify, UserCreate
@@ -69,12 +71,16 @@ def register(
     db.add(verification)
     db.commit()
 
+    send_verification_email(
+    recipient_email=new_user.email,
+    otp=otp
+)
+
     return {
         "message": "Registration successful. Verify your email.",
         "user_id": new_user.user_id,
-        "email": new_user.email,
-        "development_otp": otp
-    }
+        "email": new_user.email
+}
 
 
 @router.post("/verify-email")

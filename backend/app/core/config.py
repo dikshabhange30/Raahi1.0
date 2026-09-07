@@ -11,4 +11,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
 
+    resend_api_key: str
+    email_from: str
+
 settings = Settings()
