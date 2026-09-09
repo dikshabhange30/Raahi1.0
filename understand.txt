@@ -208,3 +208,17 @@ Think of it as the place for business logic that an endpoint needs but shouldn't
 Resend: A transactional email service that allows our Raahi backend to send emails programmatically.
  We will use it to send the email verification OTP to a user's email address during registration.
  The Raahi backend communicates with Resend using an API key, while the API key remains private in .env.
+
+
+ ** JWT : create_access_token
+
+ Think of JWT as a temporary digital pass.
+ username + password -> valid -> JWT token -> client stores token -> sends token with future requests -> backend knows "who is this?"
+
+ What is a JWT secret key?
+The JWT secret key is a private secret that only your backend knows.
+ Your backend uses it to cryptographically sign JWT tokens, so later it can detect if someone has modified or forged a token.
+
+ Login successful - >  Backend creates JWT - >  JWT + SECRET KEY → signed token - >  User receives token
+ later 
+ User sends JWT -> Backend checks JWT using SECRET KEY -> Valid signature? → ✅ trust the token Invalid signature? → ❌ reject it

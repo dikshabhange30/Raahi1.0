@@ -14,4 +14,7 @@ class Settings(BaseSettings):
     resend_api_key: str
     email_from: str
 
+    jwt_secret_key: str
+    jwt_algorithm: str = "HS256"
+
 settings = Settings()

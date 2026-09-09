@@ -9,3 +9,7 @@ class UserCreate(BaseModel):
 class EmailOTPVerify(BaseModel):
     email: EmailStr
     otp: str
+
+class LoginRequest(BaseModel):
+    username_or_email: str
+    password: str

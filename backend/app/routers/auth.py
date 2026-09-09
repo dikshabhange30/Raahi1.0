@@ -7,13 +7,15 @@ from app.core.security import (
     generate_otp,
     hash_otp,
     hash_password,
-    verify_otp
+    verify_otp,
+    create_access_token,
+    verify_password
 )
 from app.services.email import send_verification_email
 
 from app.database import get_db
 from app.models import EmailVerification, User
-from app.schemas import EmailOTPVerify, UserCreate
+from app.schemas import EmailOTPVerify, LoginRequest, UserCreate
 
 
 router = APIRouter(
@@ -133,4 +135,44 @@ def verify_email(
 
     return {
         "message": "Email verified successfully"
+    }
+
+
+@router.post("/login")
+def login(
+    login_data: LoginRequest,
+    db: Session = Depends(get_db)
+):
+    user = db.query(User).filter(
+        (User.username == login_data.username_or_email) |
+        (User.email == login_data.username_or_email)
+    ).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid username/email or password"
+        )
+
+    if not verify_password(
+        login_data.password,
+        user.password_hash
+    ):
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid username/email or password"
+        )
+
+    if not user.is_email_verified:
+        raise HTTPException(
+            status_code=403,
+            detail="Please verify your email before logging in"
+        )
+
+    access_token = create_access_token(user.user_id)
+
+    return {
+        "message": "Login successful",
+        "access_token": access_token,
+        "token_type": "bearer"
     }

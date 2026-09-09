@@ -1,7 +1,10 @@
 
 from argon2 import PasswordHasher
+from jose import jwt
+from datetime import datetime, timedelta, timezone
 
 import secrets
+from app.core.config import settings
 
 
 password_hasher = PasswordHasher()
@@ -32,3 +35,17 @@ def verify_otp(otp: str, otp_hash: str) -> bool:
         return True
     except Exception:
         return False
+
+def create_access_token(user_id: int) -> str:
+    expire = datetime.now(timezone.utc) + timedelta(minutes=30)
+
+    payload = {
+        "sub": str(user_id),
+        "exp": expire
+    }
+
+    return jwt.encode(
+        payload,
+        settings.jwt_secret_key,
+        algorithm=settings.jwt_algorithm
+    )
