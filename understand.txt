@@ -222,3 +222,26 @@ The JWT secret key is a private secret that only your backend knows.
  Login successful - >  Backend creates JWT - >  JWT + SECRET KEY → signed token - >  User receives token
  later 
  User sends JWT -> Backend checks JWT using SECRET KEY -> Valid signature? → ✅ trust the token Invalid signature? → ❌ reject it
+
+
+
+
+ get_current_user():
+A FastAPI dependency that protects endpoints by reading the Bearer JWT,
+validating it, extracting the user_id, and finding the corresponding user
+from the database.
+
+OAuth2PasswordBearer:
+A FastAPI utility that extracts the Bearer token from the Authorization header.
+It does not mean our login must use the OAuth2 login form.
+
+Protected endpoint:
+An API endpoint that can only be accessed by an authenticated user.
+
+GET /users/me:
+Returns the profile of the currently logged-in user. The backend identifies
+the user from the JWT instead of trusting a user_id sent by the frontend.
+
+Depends(get_current_user):
+FastAPI runs get_current_user() before the endpoint. If the JWT is invalid,
+expired, or the account is inactive, the request is rejected.
